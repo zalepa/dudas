@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require 'ostruct'
+
+html_files = ARGF.read.split(/\R/)
+MAX_FILES = html_files.size - 1
+
+class String
+
+  def seek(regex)
+    self.match(regex)[1]
+  end
+
+  def clean_white_space
+    self.gsub(/^\s*/, '')
+        .gsub(/\s*$/, '')
+        .gsub(/\s{2,}/, ' ')
+  end
+end
+
+module Dudas
+
+  class Patent
+
+    REGEX = OpenStruct.new(
+      title: /<font size="\+1">((?:.|\s)*?)<\/font>/i,
+      number: /<\/B>(\d,\d{3},\d{3})<\/b><\/TD>/i
+    )
+
+    def initialize(html)
+      @html = html
+    end
+
+    def title
+      @title ||= @html.seek(REGEX.title).clean_white_space
+    end
+
+    def number
+      @number ||= @html.seek(REGEX.number).clean_white_space.gsub(/,/, '')
+    end
+
+  end
+end
+
+html_files.each_with_index do |html, index|
+  patent = Dudas::Patent.new(html)
+  $stdout.print(patent.number + " : " + patent.title.inspect)
+  $stdout.print("\n")
+end
