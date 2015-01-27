@@ -2,11 +2,9 @@
 
 require 'net/http'
 
-PATFT_DOMAIN = "patft.uspto.gov"
+PATFT_URL = "http://patft.uspto.gov/netacgi/nph-Parser?"
 
-RESOURCE = "/netacgi/nph-Parser?"
-
-QUERY_STRING = <<-EOS.gsub(/\s*/, '') 
+PATFT_QUERY_STRING = <<-EOS.gsub(/\s*/, '') 
   Sect1=PTO1&
   Sect2=HITOFF&
   d=PALL&
@@ -23,17 +21,18 @@ EOS
 patents = ARGF.read.split(/\R/)
 
 def build_url(number)
-  RESOURCE + sprintf(QUERY_STRING, n: number)
+  URI(PATFT_URL + sprintf(PATFT_QUERY_STRING, n: number))
 end
 
-def get(domain, resource)
-  Net::HTTP.get(domain, resource).gsub(/\R/, '')
+def get(url)
+  Net::HTTP.get(url).gsub(/\R/, '')
 end
 
 def download(number)
-  get(PATFT_DOMAIN, build_url(number))
+  get(build_url(number))
 end
 
-patents.each_with_index do |p, index|
-  $stdout.print(download(p), "\n")
+patents.each_with_index do |number, index|
+  $stdout.print(download(number), "\n")
+  # $stdout.print("Hello")
 end
