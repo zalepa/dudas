@@ -1,22 +1,31 @@
 # Dudas CLI Tools
-A set of tools for working with PATFT data. Very much a work in progress. Tools do not require third party libraries. Created using: `ruby 2.1.4p265 (2014-10-27 revision 48166) [x86_64-darwin14.0]`
+A set of tools for working with PATFT data. Very much a work in progress. Tools 
+do not require third party libraries. Created using: `ruby 2.1.4p265 (2014-10-27
+ revision 48166) [x86_64-darwin14.0]`
 
 ## Current toolchain:
 
-* `download`: pipe a list of patents (e.g., "patents.list") and get a list of HTML source (see patents.out for a sample, basically it's one HTML file per line)
-* `parse`: pipe in output of download and (for now) get a list of patent numbers and titles
+* `download`: pipe a list of patents (e.g., "patents.list") and get a list of 
+HTML source (see patents.out for a sample, basically it's one HTML file per line
+)
+* `parse`: pipe in output of download and (for now) get a list of patent numbers
+and titles
 
-Example: `cat patents.list | ./download | ./parse > titles.out`
+
+Example: `cat patents.list | ./download | ./parse >titles.out`
 
 Example: `./download patents.list | ./parse > titles.out`
 
+Example: `./download # runs in "interactive" mode, one patent per line, end with
+EOL`
+
 ## Immediate work
 
-* ❗️ Parse should default to a certain format (JSON?)
-* ❗️ Fill in the rest of the patent details
-* ‼️ Testing (esp. with respect to regex)
-* 😎 Use method_missing? instead of individual getter methods
-* 😎 Clean up structure of `parse`
+* ❗️  Parse should default to a certain format (JSON?)
+* ❗️  Fill in the rest of the patent details
+* ‼️  Testing (esp. with respect to regex)
+* 😎  Use `method_missing?` instead of individual getter methods
+* 😎  Clean up structure of `parse`
 
 # License 
 
