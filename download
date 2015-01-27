@@ -2,26 +2,36 @@
 
 require 'net/http'
 
-DOMAIN = "patft.uspto.gov"
+PATFT_DOMAIN = "patft.uspto.gov"
+
 RESOURCE = "/netacgi/nph-Parser?"
-QUERY_STRING = "Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&" + 
-               "u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&"
-PATENT_SPECIFIC_STRING = "s1=%s.PN.&OS=PN/%s&RS=PN/%s"
+
+QUERY_STRING = <<-EOS.gsub(/\s*/, '') 
+  Sect1=PTO1&
+  Sect2=HITOFF&
+  d=PALL&
+  p=1&
+  u=%%2Fnetahtml%%2FPTO%%2Fsrchnum.htm&
+  r=1&
+  f=G&
+  l=50&
+  s1=%{n}.PN.&
+  OS=PN/%{n}&
+  RS=PN/%{n}
+EOS
 
 patents = ARGF.read.split(/\R/)
 
-class String
-  def remove_newlines
-    self.gsub(/\R/, '')
-  end
+def build_url(number)
+  RESOURCE + sprintf(QUERY_STRING, n: number)
 end
 
-def build_url(number)
-  RESOURCE + QUERY_STRING + (PATENT_SPECIFIC_STRING % Array.new(3, number))
+def get(domain, resource)
+  Net::HTTP.get(domain, resource).gsub(/\R/, '')
 end
 
 def download(number)
-  Net::HTTP.get(DOMAIN, build_url(number)).remove_newlines
+  get(PATFT_DOMAIN, build_url(number))
 end
 
 patents.each_with_index do |p, index|
