@@ -8,6 +8,8 @@ A set of tools for working with PATFT data. Very much a work in progress. Tools 
 
 Example: `cat patents.list | ./download | ./parse > titles.out`
 
+Example: `./download patents.list | ./parse > titles.out`
+
 ## Immediate work
 
 * ❗️ Parse should default to a certain format (JSON?)
